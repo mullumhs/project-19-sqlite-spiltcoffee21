@@ -1,61 +1,77 @@
 import sqlite3
-import sqlite3
-
-
 
 def create_connection():
-
-    # TODO: Create a connection to my_movie_collection.db
-
-    pass
-
-
-
+    conn = sqlite3.connect ('movie.db')
+    return conn
+    
 def create_table(conn):
-
-    # TODO: Create the movies table
-
-    pass
+    cursor = conn.cursor()
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS MOVIES (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        title TEXT NOT NULL,
+        director TEXT,
+        year INTEGER,
+        rating FLOAT
+    )
+    ''')
+    conn.commit()
 
 
 
 def add_movie(conn, title, director, year, rating):
-
-    # TODO: Insert a new movie into the database
-
-    pass
+    cursor = conn.cursor()
+    cursor.execute('''
+        INSERT INTO movies (title, director, year, rating)
+        VALUES (?, ?, ?, ?)
+    ''', (title, director, year, rating))
+    conn.commit()
+    
 
 
 
 def display_all_movies(conn):
-
-    # TODO: Select and display all movies
-
-    pass
-
+    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM movies')
+    all_movies = cursor.fetchall()
+    print("All movies:")
+    for movie in all_movies:
+        print(movie)
+    conn.commit()
 
 
 def update_movie_rating(conn, title, new_rating):
+    cursor = conn.cursor()
+    cursor.execute('''
+        UPDATE movies
+        SET rating = ?
+        WHERE title = ?
+    ''', (new_rating, title))
+    conn.commit()
 
-    # TODO: Update the rating of a specified movie
-
-    pass
 
 
 
 def delete_movie(conn, title):
-
-    # TODO: Delete a specified movie from the database
-
-    pass
+    cursor = conn.cursor()
+    cursor.execute('''
+        DELETE FROM movies WHERE title = ?
+    ''', (title, ))
+    conn.commit()
+    
 
 
 
 def find_movies_by_director(conn, director):
+    cursor = conn.cursor()
+    movies = cursor.execute('''
+        SELECT * FROM movies WHERE director = ?
+    ''', (director, )).fetchall()
+    for movie in movies:
+        print(movie)
+    conn.commit()
+    
 
-    # TODO: Find and display all movies by a specific director
-
-    pass
 
 
 
@@ -145,7 +161,7 @@ def main():
 
             elif choice == '6':
 
-                print("Thank you for using Movie Database Manager. Goodbye!")
+                print("Thank you for being gay Manager. later bru!")
 
                 break
 
